@@ -648,9 +648,10 @@ io.on('connection', async (socket) => {
     //const userID = '65dc850c6a86a49f9d1aa377'
     //const q = socket.handshake.headers.referer
       const q = socket.handshake.query.userID
-    console.log(socket)
-      const url = q ? new URL(q): console.log("Error:",socket.handshake);
-      const userID = q ? url.searchParams.get('userID'): '';
+    console.log(q)
+    const userID = q
+     // const url = q ? new URL(q): console.log("Error:",socket.handshake);
+      //const userID = q ? url.searchParams.get('userID'): '';
    
   
 
