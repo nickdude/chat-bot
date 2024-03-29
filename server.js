@@ -592,6 +592,7 @@ async function fetchUserData(userId) {
 
   try {
       const userProfileResponse = await axios.get(`https://nucleus.actofit.com:3000/smartscale/v1/user/user_get/${userId}`);
+      console.log("===============",userProfileResponse)
       userProfile = userProfileResponse.data;
   } catch (error) {
       // console.error('Error fetching userProfile:', error);
@@ -601,6 +602,7 @@ async function fetchUserData(userId) {
   try {
       //const userDataResponse = await axios.get(`https://nucleus.actofit.com:3000/smartscale/v1/metrics/getlatest/${userId}`);
       const userDataResponse = await axios.get(`https://nucleus.actofit.com:3000/smartscale/v1/metrics/get/${userId}`);
+      console.log("===============",userDataResponse)
       userData = userDataResponse.data;
   } catch (error) {
       // console.error('Error fetching userData:', error);
@@ -648,7 +650,7 @@ io.on('connection', async (socket) => {
     //const userID = '65dc850c6a86a49f9d1aa377'
     //const q = socket.handshake.headers.referer
       const q = socket.handshake.query.userID
-    console.log(q)
+        console.log(q)
     const userID = q
      // const url = q ? new URL(q): console.log("Error:",socket.handshake);
       //const userID = q ? url.searchParams.get('userID'): '';
@@ -659,7 +661,7 @@ io.on('connection', async (socket) => {
         const { 
           userProfile, 
           userData } = await fetchUserData(userID);
-          
+        
         const contextData = {
             userProfile,
             userData,
@@ -743,14 +745,17 @@ async function getChatbotResponse(prompt, projectId, modelId, userId, contextDat
                 },
             }
         );
+           
         if (response && response.data && response.data.predictions) {
             return response.data.predictions;
         } else {
             throw new Error('Unable to connect google');
         }
     } catch (error) {
-        console.error("Error:", error);
-        throw new Error('Error making prediction request: ' + error);
+        await getAccessToken()
+        getChatbotResponse(prompt, projectId, modelId, userId, contextData)
+        // console.error("Error:", error);
+        // throw new Error('Error making prediction request: ' + error);
     }
 }
 
